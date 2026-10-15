@@ -1,0 +1,23 @@
+#pond {
+  display: flex;
+  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 700px;
+  border: 2px solid blue;
+  border-radius: 90px;
+}
+
+.fish {
+  background: orange;
+  padding: 100px;
+  margin: 100px;
+  margin-bottom: 350px;
+
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  text-align: center;
+  padding-top: 10px;
+}
