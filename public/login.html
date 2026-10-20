@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Вход</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div id="pond">
+    <form id="loginForm" class="fish">
+      <h2>Вход</h2>
+      <input type="text" name="login" placeholder="Имя или адрес" required>
+      <input type="password" name="password" placeholder="Пароль" required>
+      <button type="submit">Войти</button>
+      <p id="message"></p>
+      <a href="/">Нет аккаунта? Регистрация</a>
+    </form>
+  </div>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const msg = document.getElementById('message');
+
+      try {
+        const res = await fetch('/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            login: form.login.value,
+            password: form.password.value
+          })
+        });
+        const data = await res.json();
+        msg.textContent = data.message;
+      } catch (err) {
+        console.error(err);
+        msg.textContent = 'Ошибка: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>

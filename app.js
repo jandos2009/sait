@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 
@@ -20,6 +21,44 @@ app.post('/seats', async (req, res) => {
 
   res.status(201).json(newSeat);
 });
+
+app.post('/register', async (req, res) => {
+  const {login, password, agree} = req.body;
+
+  if(!login || !password) {
+    return res.status(400).json({message: 'Заполните все поля'});
+  }
+  if (password.length < 8) {
+  return res.status(400).json({ message: 'Пароль должен быть не короче 8 символов' });
+}
+  if (!agree){
+    return res.status(400).json({message: 'Нужно принять соглашение'});  
+  }
+  const exists = await prisma.user.findUnique({where: {login} });
+  if (exists){
+    return res.status(409).json({message: 'Такой пользователь уже есть'});
+  }
+  const hash = await bcrypt.hash(password, 10);
+  await prisma.user.create({data: {login, password: hash} });
+  res.status(201).json({message: 'Вы зарегистрированы'});
+})
+
+app.post('/login', async (req, res) => {
+  const { login, password } = req.body;
+
+  if(!login || !password) {
+    return res.status(400).json({message: 'Напишиште имя или парол'});
+  }
+  const user = await prisma.user.findUnique({where: {login}});
+  if (!user) {
+    return res.status(401).json({message: 'Неправлены логин или проль'});
+  }
+  const ok = await bcrypt.compare(password, user.password);
+  if(!ok) {
+    return res.status(401).json({message: 'Неправлены логин или пароль'});
+  }
+  res.json({message: 'Добро пожаловать, ' + user.login});
+})
 
 app.listen(3000, () => {
   console.log('Сервер запущен на http://localhost:3000');

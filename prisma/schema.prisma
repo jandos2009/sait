@@ -14,3 +14,9 @@ model Seat {
   name   String
   status String
 }
+model User{
+  id Int @id @default(autoincrement())
+  login String @unique
+  password String
+  agreedAt DateTime @default(now())
+}

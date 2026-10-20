@@ -4,10 +4,40 @@
   <meta charset="UTF-8">
   <title>Привет, мир</title>
   <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <div id="pond">
-    <div class="fish">Привет, мир!</div>
+    <form id="regForm" class="fish">
+      <h2>Регестрация</h2>
+       <input type="text" name="login" placeholder="Имя или Адрес" required>
+       <input type="password" name="password" placeholder="Пароль"required minlength="8">
+       <label class="agree">
+        <input type="checkbox" name="agree" required>
+        <span>Я согласен с <a href="/terms.html">пользовательским соглашением</a>
+          и <a href="/privacy.html">политикой конфиденциальности</a></span>
+       </label>
+      <button type="submit">Зарегестрироваться</button>
+      <p id="message"></p>
+      <a href="/login.html">Уже есть аккаунт? Войти</a>
+    </form>
   </div>
+  <script>
+  document.getElementById('regForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const frome = e.target;
+    const res = await fetch('/register', {
+       method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        login: frome.login.value,
+        password: frome.password.value,
+        agree: frome.agree.checked
+      })
+    });
+    const data = await res.json();
+    document.getElementById('message').textContent = data.message;
+  });
+</script>
 </body>
 </html>
