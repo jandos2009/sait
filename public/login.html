@@ -33,7 +33,11 @@
           })
         });
         const data = await res.json();
-        msg.textContent = data.message;
+        if (res.ok) {
+          window.location.href = '/profile.html';
+        } else {
+          msg.textContent = data.message;
+        }
       } catch (err) {
         console.error(err);
         msg.textContent = 'Ошибка: ' + err.message;
