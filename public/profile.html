@@ -1,34 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru">
     <head>
-        <meta charset="UTF-8">
-        <title>Меню Ползователя</title>
-        <link rel='stylesheet' href="style.css">
-        <meta name="viewport" content="width=device-width, initail-scrale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="pond">
-            <div class="fish">
-                <h2 id="open">Загрузка....</h2>
-                <button id="logoutBtn">выйти</button>
-            </div>
+    <div id="pond">
+        <div class="fish">
+        <h2>Меню пользователя</h2>
+
+        <p id="userLogin">Загрузка...</p>
+
+        <button id="logoutBtn">Выйти</button>
         </div>
+    </div> 
 
         <script>
-            fetch('/me')
-            .then ((r) => {
-                if (!r.ok) {
-                    window.location.href = '/login.html';
-                    return null;
-                }
-                return r.json();
-            })
-            .then((d) => {
-                if (d) document.getElementById(Здрастьвуите) .textContent = 'Вы зашли как' + d.login;
-            });
-            document.getElementById('logoutBtn').addEventListener('click', async () => {
-                await fetch('/logout', {method: 'POST'});
-                window.location.href = '/login.html';
-            });
+        async function loadProfile() {
+        const res = await fetch('/me');
+
+        if (!res.ok) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        const user = await res.json();
+        document.getElementById('userLogin').textContent = 'Здравствуйте, ' + user.login;
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await fetch('/logout', { method: 'POST' });
+        window.location.href = '/login.html';
+        });
+            
+            loadProfile();
         </script>
     </body>
